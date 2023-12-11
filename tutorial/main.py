@@ -26,7 +26,12 @@ async def root():
 
 
 @app.get('/items/')
-async def read_items(query: Annotated[list[str], Query()] = None):
+async def read_items(
+    query: Annotated[
+        list[str],
+        Query(title='Query string', description='Query string for items')
+    ] = ['foo', 'bar']
+):
     return {'query': query}
 
 
