@@ -6,6 +6,13 @@ from fastapi import FastAPI
 app = FastAPI()
 
 
+fake_items_db = [
+    {'item_name': 'Foo'},
+    {'item_name': 'Bar'},
+    {'item_name': 'Baz'},
+]
+
+
 class ModelName(str, Enum):
     alex_net = 'alex_net'
     res_net = 'res_net'
@@ -15,6 +22,11 @@ class ModelName(str, Enum):
 @app.get('/')
 async def root():
     return {'message': 'Hello World'}
+
+
+@app.get('/items/')
+async def read_items(skip: int = 0, limit: int = 10):
+    return fake_items_db[skip : skip + limit]
 
 
 @app.get('/items/{item_id}')
