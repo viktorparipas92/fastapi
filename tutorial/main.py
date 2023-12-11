@@ -39,7 +39,7 @@ async def read_items(skip: int = 0, limit: int = 10):
 
 @app.post('/items/')
 async def create_item(item: Item):
-    item_dict = item.dict()
+    item_dict = item.model_dump()
     if item.tax:
         item_dict['price_with_tax'] = item.price + item.tax
 
@@ -63,6 +63,11 @@ async def read_item(
         )
 
     return item
+
+
+@app.put('/items/{item_id}')
+async def update_item(item_id: int, item: Item):
+    return {'item_id': item_id, **item.model_dump()}
 
 
 @app.get('/users/me')
