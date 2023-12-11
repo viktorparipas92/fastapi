@@ -2,6 +2,7 @@ from enum import Enum
 from typing import Optional, Annotated
 
 from fastapi import FastAPI, Query
+from fastapi.params import Path
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -46,21 +47,14 @@ async def create_item(item: Item):
 
 @app.get('/items/{item_id}')
 async def read_item(
-    item_id: int,
-    needy: str,
-    query: Optional[str] = None,
-    short: bool = False,
+    item_id: Annotated[int, Path(title='The ID of the item to get')],
+    query: Annotated[str | None, Query(alias='item-query')] = None,
 ):
-    item = {'item_id': item_id, 'needy': needy}
+    data = {'item_id': item_id}
     if query:
-        item['query'] = query
+        data['query'] = query
 
-    if not short:
-        item['description'] = (
-            'This is an amazing item that has a long description'
-        )
-
-    return item
+    return data
 
 
 @app.put('/items/{item_id}')
