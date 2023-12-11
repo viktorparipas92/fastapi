@@ -39,7 +39,11 @@ async def read_items(skip: int = 0, limit: int = 10):
 
 @app.post('/items/')
 async def create_item(item: Item):
-    return item
+    item_dict = item.dict()
+    if item.tax:
+        item_dict['price_with_tax'] = item.price + item.tax
+
+    return item_dict
 
 
 @app.get('/items/{item_id}')
