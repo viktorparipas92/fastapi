@@ -66,8 +66,12 @@ async def read_item(
 
 
 @app.put('/items/{item_id}')
-async def update_item(item_id: int, item: Item):
-    return {'item_id': item_id, **item.model_dump()}
+async def update_item(item_id: int, item: Item, query: Optional[str] = None):
+    result = {'item_id': item_id, **item.model_dump()}
+    if query:
+        result['query'] = query
+
+    return result
 
 
 @app.get('/users/me')
