@@ -31,10 +31,18 @@ async def read_items(skip: int = 0, limit: int = 10):
 
 
 @app.get('/items/{item_id}')
-async def read_item(item_id: int, query: Optional[str] = None):
+async def read_item(
+    item_id: int, query: Optional[str] = None, short: bool = False
+):
     item = {'item_id': item_id}
     if query:
         item['query'] = query
+
+    if not short:
+        item['description'] = (
+            'This is an amazing item that has a long description'
+        )
+
     return item
 
 
