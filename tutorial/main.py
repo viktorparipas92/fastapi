@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Optional
 
 from fastapi import FastAPI
 
@@ -30,8 +31,11 @@ async def read_items(skip: int = 0, limit: int = 10):
 
 
 @app.get('/items/{item_id}')
-async def read_item(item_id: int):
-    return {'item_id': item_id}
+async def read_item(item_id: int, query: Optional[str] = None):
+    item = {'item_id': item_id}
+    if query:
+        item['query'] = query
+    return item
 
 
 @app.get('/users/me')
