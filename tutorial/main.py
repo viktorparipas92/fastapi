@@ -26,14 +26,8 @@ async def root():
 
 
 @app.get('/items/')
-async def read_items(
-    query: Annotated[Optional[str], Query(max_length=50)] = None,
-):
-    results = {'items': [{'item_id': 'Foo'}, {'item_id': 'Bar'}]}
-    if query:
-        results['query'] = query
-
-    return results
+async def read_items(query: Annotated[list[str], Query()] = None):
+    return {'query': query}
 
 
 @app.post('/items/')
