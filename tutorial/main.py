@@ -1,17 +1,10 @@
 from enum import Enum
-from typing import Optional
+from typing import Optional, Annotated
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from pydantic import BaseModel
 
 app = FastAPI()
-
-
-fake_items_db = [
-    {'item_name': 'Foo'},
-    {'item_name': 'Bar'},
-    {'item_name': 'Baz'},
-]
 
 
 class Item(BaseModel):
@@ -33,8 +26,14 @@ async def root():
 
 
 @app.get('/items/')
-async def read_items(skip: int = 0, limit: int = 10):
-    return fake_items_db[skip : skip + limit]
+async def read_items(
+    query: Annotated[Optional[str], Query(max_length=50)] = None,
+):
+    results = {'items': [{'item_id': 'Foo'}, {'item_id': 'Bar'}]}
+    if query:
+        results['query'] = query
+
+    return results
 
 
 @app.post('/items/')
