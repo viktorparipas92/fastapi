@@ -56,6 +56,25 @@ async def read_user(user_id: str):
     return {'user_id': user_id}
 
 
+@app.get('/users/{user_id}/items/{item_id}')
+async def read_user_item(
+    user_id: int,
+    item_id: int,
+    query: Optional[str] = None,
+    short: bool = False,
+):
+    item = {'item_id': item_id, 'owner_id': user_id}
+    if query:
+        item['query'] = query
+
+    if not short:
+        item['description'] = (
+            'This is an amazing item that has a long description'
+        )
+
+    return item
+
+
 @app.get('/models/{model_name}')
 async def get_model(model_name: ModelName):
     model = {'model_name': model_name}
