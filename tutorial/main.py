@@ -47,7 +47,9 @@ async def create_item(item: Item):
 
 @app.get('/items/{item_id}')
 async def read_item(
-    item_id: Annotated[int, Path(title='The ID of the item to get')],
+    item_id: Annotated[
+        int, Path(title='The ID of the item to get', gt=0, le=1000)
+    ],
     query: Annotated[str | None, Query(alias='item-query')] = None,
 ):
     data = {'item_id': item_id}
