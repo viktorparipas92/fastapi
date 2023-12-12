@@ -2,16 +2,20 @@ from enum import Enum
 from typing import Optional, Annotated
 
 from fastapi import FastAPI, Query
-from fastapi.params import Path
-from pydantic import BaseModel
+from fastapi.params import Path, Body
+from pydantic import BaseModel, Field
 
 app = FastAPI()
 
 
 class Item(BaseModel):
     name: str
-    description: Optional[str] = None
-    price: float
+    description: Optional[str] = Field(
+        default=None, title='The description of the item', max_length=300
+    )
+    price: float = Field(
+        gt=0, description='The price must be greater than zero'
+    )
     tax: Optional[float] = None
 
 
@@ -60,11 +64,8 @@ async def read_item(
 
 
 @app.put('/items/{item_id}')
-async def update_item(item_id: int, item: Item, query: Optional[str] = None):
-    result = {'item_id': item_id, **item.model_dump()}
-    if query:
-        result['query'] = query
-
+async def update_item(item_id: int, item: Annotated[Item, Body(embed=True)]):
+    result = {'item_id': item_id, 'item': item}
     return result
 
 
